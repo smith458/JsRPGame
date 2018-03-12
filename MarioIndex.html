@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Game</title>
+    <style>
+    * { padding: 0; margin: 0; }
+      canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="480" height="320"></canvas>
+    <script>
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      
+      // Attributes
+      var pw = 20;
+      var ph = 20;
+
+      var px = canvas.width/2;
+      var py = canvas.height/2;
+
+      var dy = 0;
+      var ddy = 0;
+
+      // Constants
+      var g = .1;
+      var jump = -1.5;
+      var speed = 5; 
+
+      var rightPressed = false;
+      var leftPressed = false;
+      
+      // Events
+      document.addEventListener("keydown", keyDownHandler, false);
+      document.addEventListener("keyup", keyUpHandler, false);
+
+      function keyDownHandler(e) {
+        if (e.keyCode == 39) {
+          rightPressed = true;
+        }
+        else if (e.keyCode == 37) {
+          leftPressed = true;
+        }
+        else if (e.keyCode == 32){
+          ddy = jump
+        }
+      }
+
+      function keyUpHandler(e) {
+        if (e.keyCode == 39) {
+          rightPressed = false;
+        }
+        else if (e.keyCode == 37) {
+          leftPressed = false;
+        }
+      }
+      
+      // Drawing Functions
+      function drawPlayer() {
+        ctx.beginPath();
+        ctx.rect(px, py, pw, ph);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+      }
+      
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawPlayer();
+
+        if (py+dy > canvas.height - ph) {
+          dy = 0;
+        }
+
+        if (py < canvas.height - ph) {
+          py += dy;
+          dy += ddy;
+          ddy += g;
+        }
+        
+        if (rightPressed && px < canvas.width-pw) {
+          px += speed;
+        }
+        else if (leftPressed && px > 0) {
+          px -= speed;
+        }
+      }   
+      setInterval(draw, 10);
+
+    </script>
+  </body>
+</html>
